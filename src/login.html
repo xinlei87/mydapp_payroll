@@ -2,17 +2,33 @@
       <div class="card" style="margin:180px auto ;width:330px">
         <div class="card-content">
           <div class="row">
-            <form class="col s12">
+            <form class="col s12" name="loginForm">
               <div class="row">
                 <div class="input-field col s12">
-                  <input id="acountname" type="text" class="validate">
-                  <label for="acountname">用户名（手机号或者邮箱）</label>
+                  <input name="accountname" type="text" ng-model="accountname" />
+                  <label for="accountname">用户名（手机号或者邮箱）</label>
+                  <span class="" style="color:red" ng-hide="ok1">用户名不可为空</span>
                 </div>
               </div>
               <div class="row">
                 <div class="input-field col s12">
-                  <input id="password" type="password" class="validate">
+                  <input name="password" type="password" ng-model="password"/>
                   <label for="password">密码</label>
+                  <span class="" style="color:red" ng-hide="ok2">密码不可为空</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col s6">
+                  <label>
+                    <input class="with-gap" name="accounttype" type="radio" ng-model="accounttype" value="employee"/>
+                    <span>职员</span>
+                  </label>
+                </div>
+                <div class="col s6">
+                  <label>
+                    <input class="with-gap" name="accounttype" type="radio" ng-model="accounttype" value="employer"/>
+                    <span>老板</span>
+                  </label>
                 </div>
               </div>
               <div class="row ">
@@ -20,7 +36,7 @@
                     <a class="waves-effect waves-light btn" ng-click="concel()">取消</a>
                   </div>
                   <div class="col s6">
-                    <a class="waves-effect waves-light btn"ng-click="chekLogin()">登录</a>
+                    <a class="waves-effect waves-light btn" ng-click="chekLogin()">登录</a>
                   </div>
               </div>
             </form>

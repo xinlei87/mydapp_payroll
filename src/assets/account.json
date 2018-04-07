@@ -1,0 +1,12 @@
+[
+  {
+    "accountname":"1",
+    "password":"2",
+    "type":"employee"
+  },
+  {
+    "accountname":"2",
+    "password":"2",
+    "type":"employer"
+  }
+]
