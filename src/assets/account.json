@@ -2,7 +2,8 @@
   {
     "accountname":"1",
     "password":"2",
-    "type":"employee"
+    "type":"employee",
+    "id":"0"
   },
   {
     "accountname":"2",

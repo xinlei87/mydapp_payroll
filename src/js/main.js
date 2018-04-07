@@ -1,7 +1,7 @@
 'use strict';
 
 var app = angular.module('myApp',['ngRoute']);
-app.controller('loginController',function($scope,$location,$http){
+app.controller('loginController',function($scope,$location,$http,$rootScope){
   $scope.ok1 = true;
   $scope.ok2 = true;
   $scope.accountname = "";
@@ -27,6 +27,7 @@ app.controller('loginController',function($scope,$location,$http){
       for( var i = 0; i< $scope.accounts.length;i++){
         if($scope.accounts[i].accountname == $scope.accountname){
           if($scope.accounts[i].password == $scope.password && $scope.accounttype == $scope.accounts[i].type){
+            $rootScope.id = $scope.accounts[i].id;
             $location.path("/employee");
             return;
           }
@@ -44,8 +45,25 @@ app.controller('loginController',function($scope,$location,$http){
 
   }
 })
-app.controller('employeeController',function($scope){
-
+app.controller('employeeController',function($scope,$rootScope,$http,$location){
+  $scope.id = $rootScope.id;
+  $scope.obj = {};
+  $scope.info = true;
+  $http.get('/home/xinlei/mydapp/src/assets/employeeinfo.json').then(function(response){
+    $scope.obj = response.data[$scope.id];
+    console.log($scope.obj.img);
+  },function(response){
+    console.log(response);
+  });
+  $scope.getpay = function(){
+    $scope.info = false;
+  }
+  $scope.getinfo = function(){
+    $scope.info = true;
+  }
+  $scope.logout = function(){
+    $location.path("/");
+  }
 })
 app.controller('employerController',function($scope){
 
