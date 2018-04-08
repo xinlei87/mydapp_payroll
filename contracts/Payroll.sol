@@ -46,7 +46,7 @@ contract Payroll is Ownable {
         /* uint payment = employee.salary
             .mul(now.sub(employee.lastPayday))//计算工资
             .div(payDuration); */
-        uint daypayment = employee.salary.div(21.5);
+        uint daypayment = employee.salary.div(21);
         uint payment = daypayment.mul(now.sub(employee.lastPayday).div(1 days));
         employee.id.transfer(payment);
     }
