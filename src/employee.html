@@ -1,23 +1,24 @@
 <div class="row">
-      <div class="col s3" style="">
+      <div class="col s3">
         <ul class="sidenav sidenav-fixed">
           <li class="collection-item">
-            logo
+            <img  class="logoimg" src="assets/imgs/logo.png"/>
           </li>
           <li class="collection-item">
-              <span style="vertical-align:middle;margin-left:20px" href="" ng-click="getinfo()"><i class="Medium material-icons" style="vertical-align:middle;">account_box</i>&nbsp&nbsp&nbsp我的信息</span>
+            <i class="material-icons icon">account_box</i>&nbsp
+            <span class="span-text" ng-click="getinfo()">我的信息</span>
+          </li>
+          <li class="collection-item ">
+            <i class="material-icons icon">account_balance_wallet</i>
+            <span class="span-text" ng-click = "getpay()">领工资</span>
           </li>
           <li class="collection-item">
-            <i class="Large material-icons" style="vertical-align:middle;">account_balance_wallet</i>
-            <a style="vertical-align:middle;" href="" ng-click = "getpay()">领工资</a>
-          </li>
-          <li class="collection-item">
-            <i class="Medium material-icons" style="vertical-align:middle;">exit_to_app</i>
-            <a style="vertical-align:middle;" href="" ng-click="logout()">退出账户</a>
+            <i class="Medium material-icons icon">exit_to_app</i>
+            <span class="span-text" ng-click="logout()">退出账户</a>
           </li>
         </ul>
       </div>
-      <div class="col s8" ng-show="info">
+      <div class="col s8" ng-show="info" style="margin-left:-18px;">
         <div class="card">
           <div class="card-title">
             <div class="row">
@@ -62,7 +63,7 @@
           </div>
         </div>
       </div>
-      <div class="col s8" ng-hide="info">
-        我要结工资！！！
+      <div class="col s8" ng-hide="info" style="margin-left:-18px;">
+        
       </div>
     </div>

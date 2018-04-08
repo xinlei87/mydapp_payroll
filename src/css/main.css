@@ -1,4 +1,25 @@
-.collection-item{
-  line-height: 2rem !important;
-  font-size:15pt !important;
+.icon{
+  vertical-align:middle !important;
+  font-size:30px !important;
+  margin-left:38px !important;
+}
+.span-text{
+  vertical-align:middle !important;
+  font-size:20px !important;
+}
+.sidenav > li{
+  line-height: 55px !important;
+}
+.sidenav > li:hover{
+  background-color:#eeeeee !important;
+  cursor: pointer;
+}
+.sidenav{
+  width: 280px;
+}
+.logoimg{
+  height:180px;
+  width:auto;
+  margin-left:38px;
+  margin-top:25px;
 }
