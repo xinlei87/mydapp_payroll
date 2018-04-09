@@ -1,13 +1,18 @@
 'use strict';
 
-var app = angular.module('myApp',['ngRoute']);
+var app = angular.module('myApp',['ngRoute','ui.bootstrap']);
 
 // web3 合约的处理------------------
-var Web3 = require("web3");
 //创建web3对象
 // 连接到以太坊节点
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+// if (typeof web3 !== 'undefined') {
+//   web3 = new Web3(web3.currentProvider);
+// } else {
+//   // set the provider you want from Web3.providers
 
+
+console.log(web3);
 var connected = web3.isConnected();
 if(!connected){
   console.log("node not connected!");
@@ -20,6 +25,8 @@ var accounts = web3.eth.accounts;
 //   // console.log("ok");
 //
 // });
+
+
 ////--------------------
 
 
@@ -51,7 +58,12 @@ app.controller('loginController',function($scope,$location,$http,$rootScope){
         if($scope.accounts[i].accountname == $scope.accountname){
           if($scope.accounts[i].password == $scope.password && $scope.accounttype == $scope.accounts[i].type){
             $rootScope.id = $scope.accounts[i].id;
-            $location.path("/employee");
+            if($scope.accounttype == "employee"){
+              $location.path("/employee");
+            }
+            else{
+              $location.path("/employer");
+            }
             return;
           }
           else{
@@ -69,6 +81,7 @@ app.controller('loginController',function($scope,$location,$http,$rootScope){
 
   }
 })
+
 app.controller('employeeController',function($scope,$rootScope,$http,$location){
   $scope.id = $rootScope.id;
   $scope.obj = {};
@@ -86,12 +99,12 @@ app.controller('employeeController',function($scope,$rootScope,$http,$location){
     if($rootScope.contracts == null||angular.equals({}, $rootScope.contracts)){
       $.getJSON('Payroll.json',function(data){
         $rootScope.contracts.Payroll = TruffleContract(data);
-        $rootScope.contracts.Payroll.setProvider(web3);
+        //---终于改对！！！！  必须是web3.currentProvider!!!!!
+        $rootScope.contracts.Payroll.setProvider(web3.currentProvider);
         $rootScope.contracts.Payroll.deployed().then(function(instance){
-          PayrollInstance = instance;
           console.log(instance);
         })
-      });
+      })
     }
   }
   $scope.getinfo = function(){
@@ -101,7 +114,46 @@ app.controller('employeeController',function($scope,$rootScope,$http,$location){
     $location.path("/");
   }
 })
-app.controller('employerController',function($scope){
+
+app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
+  $scope.objs = [];
+  $scope.money = true;
+  $http.get('./assets/employeeinfo.json').then(function(response){
+    $scope.objs = response.data;
+  });
+
+  $scope.getinfos = function(){
+    $scope.money = true;
+  }
+
+  $scope.deleteEmployee = function(){
+    //打开模态窗口
+    $scope.modalInstance1 = $uiMmodal.open({
+      templateUrl:"deleteEmployee.html",
+      controller:"deleteEmployeeController",
+      // resolve({
+        // data:function(){
+          // return $scope.name
+        // }
+      })
+  }
+
+  $scope.addEmployee = function(){
+    $scope.modalInstance2 = $uibModal.open({
+      templateUrl:"addEmployee.html",
+      controller:"addEmployeeController"
+
+    })
+  }
+
+  $scope.changSalary = function(){
+
+  }
+})
+app.controller('deleteEmployeeController',function($uibModalInstance,$scope){
+
+})
+app.controller('addEmployeeController',function($uibModalInstance,$scope){
 
 })
 app.config(['$routeProvider','$locationProvider',function($routeProvider,$locationProvider){
@@ -117,7 +169,7 @@ app.config(['$routeProvider','$locationProvider',function($routeProvider,$locati
     '/employer',
     {
       templateUrl:'./employer.html',
-      controller:'employerController.html'
+      controller:'employerController'
     }
   )
   $routeProvider.when(

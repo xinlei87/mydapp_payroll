@@ -11,6 +11,7 @@ contract Payroll is Ownable {
         address id;//用户地址
         uint salary;//工资
         uint lastPayday;//上次发工资时间
+        uint number;//用户编号
     }
 
     uint constant payDuration = 30 days;//每30天发一次工资
@@ -51,18 +52,19 @@ contract Payroll is Ownable {
         employee.id.transfer(payment);
     }
 //查询工资情况
-    function checkEmployee(uint index) returns (address employeeId, uint salary, uint lastPayday) {
+    function checkEmployee(uint index) returns (address employeeId, uint salary, uint lastPayday,uint number) {
         employeeId = employeeList[index];
         var employee = employees[employeeId];
         salary = employee.salary;
         lastPayday = employee.lastPayday;
+        number = employee.number;
     }
 //添加员工
-    function addEmployee(address employeeId, uint salary) onlyOwner {
+    function addEmployee(address employeeId, uint salary,uint number) onlyOwner {
         var employee = employees[employeeId];
         assert(employee.id == 0x0);//检查员工是否存在
 
-        employees[employeeId] = Employee(employeeId, salary.mul(1 ether), now);
+        employees[employeeId] = Employee(employeeId, salary.mul(1 ether), now,number);
         totalSalary = totalSalary.add(employees[employeeId].salary);
         totalEmployee = totalEmployee.add(1);
         employeeList.push(employeeId);

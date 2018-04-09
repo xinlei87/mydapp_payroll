@@ -1,3 +1,171 @@
-<div>
-  this is employer
+<div class="row">
+  <div class="col s3">
+    <ul class="sidenav sidenav-fixed">
+      <li class="collection-item">
+        <img  class="logoimg" src="assets/imgs/logo.png"/>
+      </li>
+      <li class="collection-item">
+        <i class="material-icons icon">account_box</i>&nbsp
+        <span class="span-text" ng-click="getinfos()">员工列表</span>
+        <!-- 添加员工 ，删除员工，查看员工基本信息（列表形式，某个员工信息在modal中展示）-->
+      </li>
+      <li class="collection-item ">
+        <i class="material-icons icon">account_balance_wallet</i>
+        <span class="span-text" ng-click = "getpayinfo()">员工工资</span>
+        <!-- 修改员工工资 -->
+      </li>
+      <li class="collection-item">
+        <i class="Medium material-icons icon">exit_to_app</i>
+        <span class="span-text" ng-click="logout()">退出账户</a>
+      </li>
+    </ul>
+  </div>
+  <div class="col s8" ng-show="money">
+    <div class="container card">
+      <div class="container card-title">
+        员工列表 &nbsp&nbsp <button class="waves-effect waves-light btn" ng-click="addEmployee()">添加员工</button>
+      </div>
+      <div class="card-content">
+        <table class="striped">
+          <thead>
+            <tr>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>年龄</th>
+                <th>职位</th>
+                <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat = " x in objs">
+              <td>{{x.name}}</td>
+              <td>{{x.sex}}</td>
+              <td>{{x.birth}}</td>
+              <td>{{x.position}}</td>
+              <td>
+                <button class="waves-effect waves-light btn" ng-click="deleteEmployee()">删除</button>
+              </td>
+            </tr>
+          </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+  <div class="col s8" ng-hide="money">
+    <div class="container  card">
+      <div class="card-title">
+        <span>工资账户余额：{{balance}}</span>
+      </div>
+      <div class="card-content">
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>姓名</th>
+              <th>工资</th>
+              <th>职位</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="x in mobjs">
+              <td>{{x.name}}</td>
+              <td>{{x.salary}}</td>
+              <td>{{x.position}}</td>
+              <td>
+                <button class="waves-effect waves-light btn" ng-click="changSalary()">修改工资</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
+<!-- templates -->
+<script id="deleteEmployee.html" type="text/ng-template">
+  <div class="modal">
+    <div class="modal-body">
+      <p>
+        确定删除员工：{{name}}
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="waves-effect waves-light btn">取消</button>
+      <button class="waves-effect waves-light btn">确定</button>
+    </div>
+  </div>
+</script>
+
+
+<script id="addEmployee.html" type="text/ng-template">
+  <div class="modal">
+    <div class="modal-header">
+      填写员工信息
+    </div>
+    <div class="modal-content row">
+        <form class="col s12" name="infoForm">
+          <div class="row">
+            <div class="input-field col s12">
+              <input name="name" type="text" ng-model="name" />
+              <label for="name">姓名</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s6">
+              <label>
+                <input class="with-gap" type="radio" ng-model="sex" value="0"/>
+                <span>男</span>
+              </label>
+            </div>
+            <div class="col s6">
+              <label>
+                <input class="with-gap" type="radio" ng-model="ssex" value="1"/>
+                <span>女</span>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <input name="birth" type="text" ng-model="birth" />
+              <label for="birth">出生年月(xxxx-xx-xx)</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <input name="position" type="text" ng-model="position" />
+              <label for="position">职位</label>
+            </div>
+          </div>
+          <div>
+            <div class="input-field col s12">
+              <input name="salary" type="text" ng-model="salary" />
+              <label for="salary">工资</label>
+            </div>
+          </div>
+          <div>
+            <div class="input-field col s12">
+              <input name="account" type="text" ng-model="account" />
+              <label for="account">登录账户</label>
+            </div>
+          </div>
+          <div>
+            <div class="input-field col s12">
+              <input name="address" type="text" ng-model="address" />
+              <label for="address">工资账户</label>
+            </div>
+          </div>
+          <div class="row ">
+              <div class="col s6">
+                <a class="waves-effect waves-light btn" ng-click="concel()">取消</a>
+              </div>
+              <div class="col s6">
+                <a class="waves-effect waves-light btn" ng-click="chekLogin()">确定</a>
+              </div>
+          </div>
+        </form>
+    </div>
+  </div>
+</script>
