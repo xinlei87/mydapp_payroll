@@ -59,8 +59,18 @@ contract Payroll is Ownable {
         lastPayday = employee.lastPayday;
         number = employee.number;
     }
+//查询所有员工工资情况
+    function searchEmployees() returns(Employee[] employeeArray){
+      for(var i = 0; i< totalEmployee; i++){
+        var id = employeeList[i];
+        var employee = employees[id];
+        employeeArray[i].salary = employee.salary;
+        employeeArray[i].lastPayday = employee.lastPayday;
+        employeeArray[i].number = employee.lastPayday;
+      }
+    }
 //添加员工
-    function addEmployee(address employeeId, uint salary,uint number) onlyOwner {
+    function addEmployee(address employeeId, uint salary, uint number) onlyOwner {
         var employee = employees[employeeId];
         assert(employee.id == 0x0);//检查员工是否存在
 
@@ -119,7 +129,7 @@ contract Payroll is Ownable {
     function checkInfo() returns (uint balance, uint runway, uint employeeCount) {
         balance = this.balance;
         employeeCount = totalEmployee;
-
+        runway = 0;
         if (totalSalary > 0) {
             runway = calculateRunway();
         }

@@ -5,22 +5,22 @@ var app = angular.module('myApp',['ngRoute','ui.bootstrap','ngAnimate']);
 // web3 合约的处理------------------
 //创建web3对象
 // 连接到以太坊节点
-// var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+ var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
 // // if (typeof web3 !== 'undefined') {
 // //   web3 = new Web3(web3.currentProvider);
 // // } else {
 // //   // set the provider you want from Web3.providers
 //
 //
-// console.log(web3);
-// var connected = web3.isConnected();
-// if(!connected){
-//   console.log("node not connected!");
-// }else{
-//   console.log("node connected");
-// }
+console.log(web3);
+var connected = web3.isConnected();
+if(!connected){
+  console.log("node not connected!");
+}else{
+  console.log("node connected");
+}
 // //获取区块链上的账户
-// var accounts = web3.eth.accounts;
+
 // $.getJSON('Payroll.json',function(data){
 //   // console.log("ok");
 //
@@ -76,7 +76,7 @@ app.controller('loginController',function($scope,$location,$http,$rootScope){
       return;
     },function(date){
       console.log("shibai");
-      console.log(data);
+      console.log(date);
     })
 
   }
@@ -87,6 +87,10 @@ app.controller('employeeController',function($scope,$rootScope,$http,$location){
   $scope.obj = {};
   $scope.info = true;
   $rootScope.contracts = {};
+  $rootScope.accounts = web3.eth.getAccounts(function(e,acs){
+    $rootScope.account = acs[0];
+    console.log(account);
+  });
   $http.get('./assets/employeeinfo.json').then(function(response){
     $scope.obj = response.data[$scope.id];
     console.log($scope.obj.img);
@@ -121,11 +125,23 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
   $http.get('./assets/employeeinfo.json').then(function(response){
     $scope.objs = response.data;
   });
+  $scope.sum = $scope.objs.length;
+  $rootScope.contracts = {};
+
+  $.getJSON('Payroll.json',function(data){
+    $rootScope.contracts.Payroll = TruffleContract(data);
+    //---终于改对！！！！  必须是web3.currentProvider!!!!!
+    $rootScope.contracts.Payroll.setProvider(web3.currentProvider);
+    $rootScope.contracts.Payroll.deployed().then(function(instance){
+      console.log(instance);
+    })
+  })
+
 
   $scope.getinfos = function(){
     $scope.money = true;
   }
-
+//删除员工
   $scope.deleteEmployee = function(temp){
     //打开模态窗口
     $scope.modalInstance1 = $uibModal.open({
@@ -147,8 +163,8 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
     },function(e){
       console.log(e);
     })
-}
-
+  }
+//添加员工
   $scope.addEmployee = function(){
     $scope.modalInstance2 = $uibModal.open({
       templateUrl:"addEmployee.html",
@@ -158,16 +174,86 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       if(result == 'close'){
         return ;
       }
-      //存储用户输入
-      console.log(result);
+      $rootScope.contracts.Payroll.deployed().then(function(instance){
+        instance.addEmployee(result.payAccount, result.salary, $scope.sum, {from: $rootScope.account,gas:300000}).then(function(d){
+          console.log(d);
+        },function(e){
+          console.log(e);
+        });
+      });
     },function(e){
       console.log(e);
     })
   }
+//修改工资
   $scope.changSalary = function(){
 
   }
+//账户充值
+  $scope.addFund = function(){
+    $scope.modalInstance3 = $uibModal.open({
+      templateUrl:'addFund.html',
+      controller:'addFundController'
+    })
+    $scope.modalInstance3.result.then(function(responce){
+      if(responce == 'close'){
+        return ;
+      }
+      //账户充值
+      // $rootScope.contracts.Payroll.deployed().then(function(instance){
+      //   instance.addFund(responce).then(function(responce){
+      //     console.log("changzhichenggong!!!");
+      //   },function(e){
+      //     console.log(e);
+      //   })
+      // },function(e){
+      //   console.log(e);
+      // })
+      //更改显示的值
+    })
+  }
+//查看员工工资
+  $scope.getpayinfo = function(){
+    $scope.money = false;
+    $scope.payobjs = [];
+    // $scope.balance;
+    // $scope.count;
+    //员工人数---》一个一个的得到员工的工资，编号与json文件的编号相对应
+    $rootScope.contracts.Payroll.deployed().then(function(instance){
+      return instance.checkInfo.call();
+    }).then(function(data){
+      $scope.balance = data[0].c[0];
+      $scope.count = data[2].c[0];
+      console.log($scope.count);
+    }).then(function(){
+      //solidity不支持返回结构提数组，只能一个一个的查询
+      for(var i = 0; i< $scope.count; i++){
+        var temp = {};
+        $rootScope.contracts.Payroll.deployed().then(function(instance){
+          instance.checkEmployee(i, {from: $rootScope.account}).then(function(responce){
+            console.log(responce);
+          },function(e){
+            console.log(e);
+          })
+        })
+      }
+    })
+
+  }
 })
+
+app.controller('addFundController',function($scope,$uibModalInstance){
+  $scope.fund;
+
+  $scope.ok = function(){
+    $uibModalInstance.close($scope.fund);
+  }
+  $scope.cancel = function(){
+    $uibModalInstance.dismiss('close');
+  }
+
+})
+
 app.controller('deleteEmployeeController',function($uibModalInstance,$scope,name){
   $scope.name = name;
   $scope.ok = function(){
@@ -177,13 +263,14 @@ app.controller('deleteEmployeeController',function($uibModalInstance,$scope,name
     $uibModalInstance.dismiss('close');
   }
 })
+
 app.controller('addEmployeeController',function($uibModalInstance,$scope){
   $scope.obj = {};
   $scope.ok = function(){
     $scope.obj.name = $scope.name;
     $scope.obj.sex = $scope.sex;
     $scope.obj.birth = $scope.birth;
-    $scope.obj.salary = $scope.obj;
+    $scope.obj.salary = $scope.salary;
     $scope.obj.position = $scope.position;
     $scope.obj.address = $scope.address;
     $scope.obj.account = $scope.account;

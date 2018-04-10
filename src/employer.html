@@ -53,8 +53,13 @@
   </div>
   <div class="col s8" ng-hide="money">
     <div class="container  card">
-      <div class="card-title">
-        <span>工资账户余额：{{balance}}</span>
+      <div class="row">
+        <div class="col s6">
+          <span>工资账户余额：{{balance}}</span>
+        </div>
+        <div class="col s6">
+          <button class="waves-effect waves-light btn" ng-click="addFund()">账户充值</button>
+        </div>
       </div>
       <div class="card-content">
         <table class="striped">
@@ -85,6 +90,29 @@
 
 
 <!-- templates -->
+
+<script id = "addFund.html" type="text/ng-template">
+  <div class="modal-content">
+    <div class="row">
+      <div class="input-field col s12">
+        <input name="fund" type="number" ng-model="fund" />
+        <label for="fund">充值金额</label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="row ">
+        <div class="col s6">
+          <a class="waves-effect waves-light btn" ng-click="cancel()">取消</a>
+        </div>
+        <div class="col s6">
+          <a class="waves-effect waves-light btn" ng-click="ok()">确定</a>
+        </div>
+    </div>
+  </div>
+</script>
+
+
 <script id="deleteEmployee.html" type="text/ng-template">
   <div class="panel">
     <div class="modal-content">
