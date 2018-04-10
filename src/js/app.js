@@ -1,26 +1,26 @@
 'use strict';
 
-var app = angular.module('myApp',['ngRoute','ui.bootstrap']);
+var app = angular.module('myApp',['ngRoute','ui.bootstrap','ngAnimate']);
 
 // web3 合约的处理------------------
 //创建web3对象
 // 连接到以太坊节点
-var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
-// if (typeof web3 !== 'undefined') {
-//   web3 = new Web3(web3.currentProvider);
-// } else {
-//   // set the provider you want from Web3.providers
-
-
-console.log(web3);
-var connected = web3.isConnected();
-if(!connected){
-  console.log("node not connected!");
-}else{
-  console.log("node connected");
-}
-//获取区块链上的账户
-var accounts = web3.eth.accounts;
+// var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+// // if (typeof web3 !== 'undefined') {
+// //   web3 = new Web3(web3.currentProvider);
+// // } else {
+// //   // set the provider you want from Web3.providers
+//
+//
+// console.log(web3);
+// var connected = web3.isConnected();
+// if(!connected){
+//   console.log("node not connected!");
+// }else{
+//   console.log("node connected");
+// }
+// //获取区块链上的账户
+// var accounts = web3.eth.accounts;
 // $.getJSON('Payroll.json',function(data){
 //   // console.log("ok");
 //
@@ -126,35 +126,73 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
     $scope.money = true;
   }
 
-  $scope.deleteEmployee = function(){
+  $scope.deleteEmployee = function(temp){
     //打开模态窗口
-    $scope.modalInstance1 = $uiMmodal.open({
+    $scope.modalInstance1 = $uibModal.open({
       templateUrl:"deleteEmployee.html",
       controller:"deleteEmployeeController",
-      // resolve({
-        // data:function(){
-          // return $scope.name
-        // }
-      })
-  }
+      resolve:{
+         name:function(){
+           return temp.name;
+         }
+      }
+    })
+    $scope.modalInstance1.result.then(function(responce){
+      console.log(responce);
+      if(responce == 'ok'){
+        //删除用户
+        ;
+      }
+      else return ;
+    },function(e){
+      console.log(e);
+    })
+}
 
   $scope.addEmployee = function(){
     $scope.modalInstance2 = $uibModal.open({
       templateUrl:"addEmployee.html",
       controller:"addEmployeeController"
-
+    })
+    $scope.modalInstance2.result.then(function(result){
+      if(result == 'close'){
+        return ;
+      }
+      //存储用户输入
+      console.log(result);
+    },function(e){
+      console.log(e);
     })
   }
-
   $scope.changSalary = function(){
 
   }
 })
-app.controller('deleteEmployeeController',function($uibModalInstance,$scope){
-
+app.controller('deleteEmployeeController',function($uibModalInstance,$scope,name){
+  $scope.name = name;
+  $scope.ok = function(){
+    $uibModalInstance.close('ok');
+  }
+  $scope.cancel = function(){
+    $uibModalInstance.dismiss('close');
+  }
 })
 app.controller('addEmployeeController',function($uibModalInstance,$scope){
-
+  $scope.obj = {};
+  $scope.ok = function(){
+    $scope.obj.name = $scope.name;
+    $scope.obj.sex = $scope.sex;
+    $scope.obj.birth = $scope.birth;
+    $scope.obj.salary = $scope.obj;
+    $scope.obj.position = $scope.position;
+    $scope.obj.address = $scope.address;
+    $scope.obj.account = $scope.account;
+    $scope.obj.payAccount = $scope.payAccount;
+    $uibModalInstance.close($scope.obj);
+  }
+  $scope.cancel = function(){
+    $uibModalInstance.dismiss('close');
+  }
 })
 app.config(['$routeProvider','$locationProvider',function($routeProvider,$locationProvider){
   $locationProvider.hashPrefix('');
