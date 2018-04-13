@@ -70,11 +70,11 @@ contract Payroll is Ownable {
       }
     }
 //添加员工
-    function addEmployee(address employeeId, uint salary, uint number) onlyOwner {
+    function addEmployee(address employeeId, uint salary, uint number) onlyOwner{
         var employee = employees[employeeId];
         assert(employee.id == 0x0);//检查员工是否存在
 
-        employees[employeeId] = Employee(employeeId, salary.mul(1 ether), now,number);
+        employees[employeeId] =  Employee(employeeId, salary.mul(1 ether), now,number);
         totalSalary = totalSalary.add(employees[employeeId].salary);
         totalEmployee = totalEmployee.add(1);
         employeeList.push(employeeId);
@@ -128,10 +128,16 @@ contract Payroll is Ownable {
 
     function checkInfo() returns (uint balance, uint runway, uint employeeCount) {
         balance = this.balance;
-        employeeCount = totalEmployee;
+        employeeCount = employeeList.length;
         runway = 0;
-        if (totalSalary > 0) {
+        /* if (totalSalary > 0) {
             runway = calculateRunway();
-        }
+        } */
+    }
+    function checkOwner() returns (address _address){
+      _address = owner;
+    }
+    function checkSender() returns(address _address){
+      _address = msg.sender;
     }
 }

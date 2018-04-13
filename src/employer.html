@@ -68,14 +68,16 @@
               <th>姓名</th>
               <th>工资</th>
               <th>职位</th>
+              <th>账户</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="x in mobjs">
+            <tr ng-repeat="x in pays">
               <td>{{x.name}}</td>
               <td>{{x.salary}}</td>
               <td>{{x.position}}</td>
+              <td>{{x.address}}</td>
               <td>
                 <button class="waves-effect waves-light btn" ng-click="changSalary()">修改工资</button>
               </td>
