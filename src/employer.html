@@ -52,7 +52,7 @@
     </div>
   </div>
   <div class="col s8" ng-hide="money">
-    <div class="container  card">
+    <div class="card">
       <div class="row">
         <div class="col s6">
           <span>工资账户余额：{{balance}}</span>
@@ -66,20 +66,23 @@
           <thead>
             <tr>
               <th>姓名</th>
-              <th>工资</th>
+              <th>工资(ether)</th>
               <th>职位</th>
               <th>账户</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="x in pays">
+            <tr ng-repeat="x in pays" ng-show="x.salary != 0">
               <td>{{x.name}}</td>
               <td>{{x.salary}}</td>
               <td>{{x.position}}</td>
               <td>{{x.address}}</td>
               <td>
-                <button class="waves-effect waves-light btn" ng-click="changSalary()">修改工资</button>
+                <button class="waves-effect waves-light btn" ng-click="changSalary(x)">修改工资</button>
+              </td>
+              <td>
+                <button class="waves-effect waves-light btn" ng-click="deleteEmployee(x)">删除员工</button>
               </td>
             </tr>
           </tbody>
@@ -208,6 +211,35 @@
                 </div>
             </div>
           </form>
+      </div>
+    </div>
+  </script>
+
+  <script id="changSalary.html" type="text/ng-template">
+    <div class="panel">
+      <div class="modal-content">
+        <div class="row">
+          <div class="col s12">
+            <span>姓名：{{temp.name}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <span>原工资：{{temp.salary}}</span>
+        </div>
+        <div class="row">
+          <span>设置新工资：</span>
+          <input  ng-model="newsalary" type="number"/>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row ">
+            <div class="col s6">
+              <a class="waves-effect waves-light btn" ng-click="cancel()">取消</a>
+            </div>
+            <div class="col s6">
+              <a class="waves-effect waves-light btn" ng-click="ok()">确定</a>
+            </div>
+        </div>
       </div>
     </div>
   </script>

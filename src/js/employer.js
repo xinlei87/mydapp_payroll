@@ -16,6 +16,8 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
     $rootScope.contracts.Payroll.deployed().then(function(instance){
       //避免要多次获取合约实例
       $rootScope.contracts.Payroll.instance = instance;
+      $rootScope.contracts.Payroll.address = instance.address;
+      // console.log(instance.address);
     })
   })
 
@@ -23,7 +25,7 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
   $scope.getinfos = function(){
     $scope.money = true;
   }
-//删除员工
+//删除员工 ok
   $scope.deleteEmployee = function(temp){
     //打开模态窗口
     $scope.modalInstance1 = $uibModal.open({
@@ -39,14 +41,18 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       console.log(responce);
       if(responce == 'ok'){
         //删除用户
-        ;
+        $rootScope.contracts.Payroll.instance.removeEmployee(temp.address,{from:$rootScope.account,gas:300000}).then(function(re){
+          console.log(re);
+        },function(e){
+          console.log(e);
+        })
       }
       else return ;
     },function(e){
       console.log(e);
     })
   }
-//添加员工
+//添加员工 ok
   $scope.addEmployee = function(){
     $scope.modalInstance2 = $uibModal.open({
       templateUrl:"addEmployee.html",
@@ -69,9 +75,35 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       console.log(e);
     })
   }
-//修改工资
-  $scope.changSalary = function(){
+//修改工资 ok
+  $scope.changSalary = function(temp){
+    //用户输入新工资
+    $scope.modalInstance4 = $uibModal.open({
+      templateUrl:'changSalary.html',
+      controller:'changSalaryController',
+      resolve:{
+          temp: function (){
+            return temp;
+          }
+      }
+    })
 
+    $scope.modalInstance4.result.then(function(re){
+      if(re == 'close'){
+        return;
+      }
+      else{
+        console.log("newsalary:");
+        console.log(re);
+        $rootScope.contracts.Payroll.instance.updateEmployee(temp.address,re,{from:$rootScope.account,gas:300000}).then(function(re){
+          console.log(re);
+        },function(e){
+          console.log(e);
+        })
+      }
+    },function(e){
+      console.log(e);
+    })
   }
 //账户充值
   $scope.addFund = function(){
@@ -83,20 +115,22 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       if(responce == 'close'){
         return ;
       }
-      //账户充值
-      // $rootScope.contracts.Payroll.deployed().then(function(instance){
-      //   instance.addFund(responce).then(function(responce){
-      //     console.log("changzhichenggong!!!");
-      //   },function(e){
-      //     console.log(e);
+      //账户充值-----!!!!
+      // $rootScope.contracts.Payroll.instance.sendTransaction({from:$rootScope.contracts.Payroll.account,gas:30000,to:$rootScope.contracts.Payroll.address,value:responce},function(re){
+      //   console.log("ok");
+      // }).then(function(re){
+      //   console.log(re);
+      //   $rootScope.contracts.Payroll.instance.addFund.call().then(function(re){
+      //     console.log(re);
       //   })
-      // },function(e){
-      //   console.log(e);
       // })
+
       //更改显示的值
+    },function(e){
+      console.log(e);
     })
   }
-//查看员工工资
+//查看员工工资 ok
   $scope.getpayinfo = function(){
     $scope.money = false;
     $scope.payobjs = [];
@@ -109,6 +143,7 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
     $scope.count = data[2].c[0];
     console.log("员工人数：" + $scope.count);
     }).then(function(){
+      $scope.$apply('balance');
       //solidity不支持返回结构提数组，只能一个一个的查询
       for(var i = 0; i< $scope.count; i++){
           //一定要进行类型转换，不然会抛出 invalid opcode 错误
@@ -116,32 +151,34 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
           //找了一天的bug
           // console.log("j:" + j);
           $rootScope.contracts.Payroll.instance.checkEmployee.call(j,{from : $rootScope.account,gas:300000}).then(function(responce){
-            // console.log(responce.toLocaleString());
+            console.log(responce.toLocaleString());
             var temp = responce.toLocaleString().split(',');
             $scope.payobjs.push(temp);
             //不可用 $scope.payobjs[j] = responce !!!
             //js 的闭包是大问题！！！
           },function(e){
             console.log(e);
-          });
+          }).then(function(){
+            // console.log("length:");
+            // console.log($scope.payobjs.length);
+            if($scope.payobjs.length == $scope.count){
+              console.log("is ok");
+              for(var i = 0; i< $scope.count; i++){
+                var tempobj = new Object();
+                tempobj.address = $scope.payobjs[i][0];
+                tempobj.salary = web3.fromWei($scope.payobjs[i][1],'ether');
+                tempobj.lastPayday = $scope.payobjs[i][2];
+                tempobj.number = $scope.payobjs[i][3];
+                $scope.pays.push(tempobj);
+              }
+            }
+          }).then(function(){
+            //触发更新视图
+            $scope.$apply('pays');
+          })
       }
-      return $scope.payobjs;
+    }).then(function(){
+      console.log($scope.pays);
     });
-    $scope.getlength = function(){
-      return $scope.payobjs.length;
-    }
-    $scope.$watch('payobjs',function(newValue, oldValue){
-      if($scope.payobjs.length == $scope.count){
-        console.log("is time");
-        for(var i = 0; i< $scope.count; i++){
-          $scope.pays[i].address = $scope.payobjs[i][0];
-          $scope.pays[i].salary = $scope.payobjs[i][1];
-          $scope.pays[i].lastPayday = $scope.payobjs[i][2];
-          $scope.pays[i].number = $scope.payobjs[i][3];
-        }
-        console.log($scope.pays);
-      }
-    },true);
-
   }
 })

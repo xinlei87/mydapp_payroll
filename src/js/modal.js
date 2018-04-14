@@ -1,3 +1,14 @@
+app.controller('changSalaryController',function($scope,$uibModalInstance,temp){
+  $scope.temp = temp;
+  $scope.newsalary;
+
+  $scope.cancel = function(){
+    $uibModalInstance.dismiss('close');
+  }
+  $scope.ok = function(){
+    $uibModalInstance.close($scope.newsalary);
+  }
+})
 app.controller('addFundController',function($scope,$uibModalInstance){
   $scope.fund;
 
