@@ -96,9 +96,9 @@ contract Payroll is Ownable {
 
         _partialPaid(employee);
         totalSalary = totalSalary.sub(employee.salary);
-        employee.salary = salary.mul(1 ether);
-        employee.lastPayday = now;
-        totalSalary = totalSalary.add(employee.salary);
+        employees[employeeId].salary = salary.mul(1 ether);
+        employees[employeeId].lastPayday = now;
+        totalSalary = totalSalary.add(employees[employeeId].salary);
         UpdateEmployee(employeeId);
     }
 //????

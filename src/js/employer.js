@@ -17,7 +17,6 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       //避免要多次获取合约实例
       $rootScope.contracts.Payroll.instance = instance;
       $rootScope.contracts.Payroll.address = instance.address;
-      // console.log(instance.address);
     })
   })
 
@@ -62,7 +61,6 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       if(result == 'close'){
         return ;
       }
-      // $rootScope.contracts.Payroll.deployed().then(function(instance){
         $rootScope.contracts.Payroll.instance.addEmployee(result.payAccount, result.salary, $scope.sum, {from: $rootScope.account,gas:300000}).then(function(re){
           $scope.sum ++;
           console.log("re:");
@@ -70,7 +68,6 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
         },function(e){
           console.log(e);
         });
-      // })
     },function(e){
       console.log(e);
     })
@@ -115,16 +112,12 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       if(responce == 'close'){
         return ;
       }
-      //账户充值-----!!!!
-      // $rootScope.contracts.Payroll.instance.sendTransaction({from:$rootScope.contracts.Payroll.account,gas:30000,to:$rootScope.contracts.Payroll.address,value:responce},function(re){
-      //   console.log("ok");
-      // }).then(function(re){
-      //   console.log(re);
-      //   $rootScope.contracts.Payroll.instance.addFund.call().then(function(re){
-      //     console.log(re);
-      //   })
-      // })
-
+      //账户充值 ok
+      console.log("chongzhi :" + responce);
+      $rootScope.contracts.Payroll.instance.addFund({from:$rootScope.accout,value:web3.toWei(responce)}).then(function(re){
+        $scope.balance = responce;
+        console.log(re);
+      })
       //更改显示的值
     },function(e){
       console.log(e);
@@ -139,7 +132,7 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
     $scope.count;
     //员工人数---》一个一个的得到员工的工资，编号与json文件的编号相对应
     $rootScope.contracts.Payroll.instance.checkInfo.call().then(function(data){
-    $scope.balance = data[0].c[0];
+    $scope.balance = web3.fromWei(data[0].c[0],'ether');
     $scope.count = data[2].c[0];
     console.log("员工人数：" + $scope.count);
     }).then(function(){
