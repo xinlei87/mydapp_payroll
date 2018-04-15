@@ -2,16 +2,15 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
   $scope.objs = [];
   $scope.money = true;
   $scope.sum = 1
-  // $http.get('./assets/employeeinfo.json').then(function(response){
-  //   $scope.objs = response.data;
-  //   $scope.sum = $scope.objs.length;
-  //   console.log("sum:" + $scope.sum);
-  // });
+
   $http({
     method:'GET',
     url:'http://localhost:8888/employeesinfo'
   }).then(function(response){
     console.log(response);
+    $scope.objs = response.data;
+    $scope.sum = $scope.objs.length;
+    console.log($scope.sum);
   },function(e){
     console.log(e);
   })
@@ -48,10 +47,20 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       console.log(responce);
       if(responce == 'ok'){
         //删除用户
-        $rootScope.contracts.Payroll.instance.removeEmployee(temp.address,{from:$rootScope.account,gas:300000}).then(function(re){
-          console.log(re);
-        },function(e){
-          console.log(e);
+        $http({
+          method:'DELETE',
+          url:'http:localhost:8888/delete'
+          params{
+            id:temp.number
+          }
+        }).then(function(response){
+          console.log(response);
+          $rootScope.contracts.Payroll.instance.removeEmployee(temp.address,{from:$rootScope.account,gas:300000}).then(function(re){
+            console.log(re);
+
+          },function(e){
+            console.log(e);
+          })
         })
       }
       else return ;
@@ -79,8 +88,7 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
           birth:result.birth,
           position:result.position,
           address:result.address,
-          accountname:result.accountname,
-          id:$scope.sum+1
+          accountname:result.accountname
         },
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         transformRequest: function(obj) {
@@ -93,7 +101,7 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       }).then(function(response){
         console.log(response);
         //存储链上信息
-        $rootScope.contracts.Payroll.instance.addEmployee(result.payAccount, result.salary, $scope.sum, {from: $rootScope.account,gas:300000}).then(function(re){
+        $rootScope.contracts.Payroll.instance.addEmployee(result.payAccount, result.salary, $scope.sum +1, {from: $rootScope.account,gas:300000}).then(function(re){
           $scope.sum ++;
           console.log("re:");
           console.log(re);
@@ -158,7 +166,7 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       console.log(e);
     })
   }
-//查看员工工资 ok
+//查看员工工资 ok  用户的number（区块链）属性与id（数据库）属性一一对应
   $scope.getpayinfo = function(){
     $scope.money = false;
     $scope.payobjs = [];

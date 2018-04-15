@@ -31,7 +31,6 @@
             <tr>
                 <th>姓名</th>
                 <th>性别</th>
-                <th>年龄</th>
                 <th>职位</th>
                 <th>操作</th>
             </tr>
@@ -40,10 +39,9 @@
             <tr ng-repeat = " x in objs">
               <td>{{x.name}}</td>
               <td>{{x.sex}}</td>
-              <td>{{x.birth}}</td>
               <td>{{x.position}}</td>
               <td>
-                <button class="waves-effect waves-light btn" ng-click="deleteEmployee(x)">删除</button>
+                <button class="waves-effect waves-light btn" ng-click="Employeeinfo(x)">详细信息</button>
               </td>
             </tr>
           </tbody>
