@@ -6,26 +6,20 @@ var app = angular.module('myApp',['ngRoute','ui.bootstrap','ngAnimate']);
 //创建web3对象
 // 连接到以太坊节点
 
-if (typeof web3 !== 'undefined') {
-  web3 = new Web3(web3.currentProvider);
-} else {
-  //set the provider you want from Web3.providers
-  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
-}
-//
-var connected = web3.isConnected();
-if(!connected){
-  console.log("node not connected!");
-}else{
-  console.log("node connected");
-}
+// if (typeof web3 !== 'undefined') {
+//   web3 = new Web3(web3.currentProvider);
+// } else {
+//   //set the provider you want from Web3.providers
+//   web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+// }
+// //
+// var connected = web3.isConnected();
+// if(!connected){
+//   console.log("node not connected!");
+// }else{
+//   console.log("node connected");
+// }
 // //获取区块链上的账户
-
-// $.getJSON('Payroll.json',function(data){
-//   // console.log("ok");
-//
-// });
-
 
 ////--------------------
 
@@ -51,34 +45,40 @@ app.controller('loginController',function($scope,$location,$http,$rootScope){
       $scope.ok2 = false;
       return ;
     }
-    $http.get('./assets/account.json').then(function(response){
-      $scope.accounts = response.data;
-      for( var i = 0; i< $scope.accounts.length;i++){
-        if($scope.accounts[i].accountname == $scope.accountname){
-          if($scope.accounts[i].password == $scope.password && $scope.accounttype == $scope.accounts[i].type){
-            $rootScope.id = $scope.accounts[i].id;
-            if($scope.accounttype == "employee"){
-              $location.path("/employee");
-            }
-            else{
-              $location.path("/employer");
-            }
-            return;
+    //提交用户名，密码
+    // $scope.password = hex_md5($scope.password);
+    $http({
+      method:'POST',
+      url:'http://localhost:8888/login',
+      data:{
+        accountname:$scope.accountname,
+        password:$scope.password
+      },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      transformRequest: function(obj) {
+          var str = [];
+          for (var s in obj) {
+            str.push(encodeURIComponent(s) + "=" + encodeURIComponent(obj[s]));
+          }
+          return str.join("&");
+        }
+      }).then(function(response){
+          console.log("ok");
+          if($scope.accounttype == "employee"){
+            //记录用户id 
+            $rootScope.userid = response.data.id;
+            $location.path("/employee");
           }
           else{
-            alert("密码或账户类型错误！");
-            return ;
+            $location.path("/employer");
           }
-        }
-      }
-      alert("用户名不存在！");
-      return;
-    },function(date){
-      console.log("shibai");
-      console.log(date);
-    })
-
+      },function(e){
+          console.log("bad");
+          console.log(e);
+          alert("用户名或密码错误");
+      })
   }
+
 })
 
 //路由控制

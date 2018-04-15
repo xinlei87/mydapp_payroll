@@ -1,12 +1,20 @@
 app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
   $scope.objs = [];
   $scope.money = true;
-  $http.get('./assets/employeeinfo.json').then(function(response){
-    $scope.objs = response.data;
-    $scope.sum = $scope.objs.length;
-    console.log("sum:" + $scope.sum);
-  });
-
+  $scope.sum = 1
+  // $http.get('./assets/employeeinfo.json').then(function(response){
+  //   $scope.objs = response.data;
+  //   $scope.sum = $scope.objs.length;
+  //   console.log("sum:" + $scope.sum);
+  // });
+  $http({
+    method:'GET',
+    url:'http://localhost:8888/employeesinfo'
+  }).then(function(response){
+    console.log(response);
+  },function(e){
+    console.log(e);
+  })
   $rootScope.contracts = {};
 
   $.getJSON('Payroll.json',function(data){
@@ -14,9 +22,9 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
     //---终于改对！！！！  必须是web3.currentProvider!!!!!
     $rootScope.contracts.Payroll.setProvider(web3.currentProvider);
     $rootScope.contracts.Payroll.deployed().then(function(instance){
-      //避免要多次获取合约实例
-      $rootScope.contracts.Payroll.instance = instance;
-      $rootScope.contracts.Payroll.address = instance.address;
+    //避免要多次获取合约实例
+    $rootScope.contracts.Payroll.instance = instance;
+    $rootScope.contracts.Payroll.address = instance.address;
     })
   })
 
@@ -61,6 +69,30 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       if(result == 'close'){
         return ;
       }
+      //存储员工姓名等其他信息
+      $http({
+        method:'POST',
+        url:'http://localhost:8888/addEmployee',
+        data:{
+          name:result.name,
+          sex: result.sex,
+          birth:result.birth,
+          position:result.position,
+          address:result.address,
+          accountname:result.accountname,
+          id:$scope.sum+1
+        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        transformRequest: function(obj) {
+            var str = [];
+            for (var s in obj) {
+              str.push(encodeURIComponent(s) + "=" + encodeURIComponent(obj[s]));
+            }
+            return str.join("&");
+          }
+      }).then(function(response){
+        console.log(response);
+        //存储链上信息
         $rootScope.contracts.Payroll.instance.addEmployee(result.payAccount, result.salary, $scope.sum, {from: $rootScope.account,gas:300000}).then(function(re){
           $scope.sum ++;
           console.log("re:");
@@ -68,6 +100,9 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
         },function(e){
           console.log(e);
         });
+      },function(e){
+        console.log(e);
+      })
     },function(e){
       console.log(e);
     })

@@ -40,7 +40,7 @@ app.controller('addEmployeeController',function($uibModalInstance,$scope){
     $scope.obj.salary = $scope.salary;
     $scope.obj.position = $scope.position;
     $scope.obj.address = $scope.address;
-    $scope.obj.account = $scope.account;
+    $scope.obj.accountname = $scope.accountname;
     $scope.obj.payAccount = $scope.payAccount;
     $uibModalInstance.close($scope.obj);
   }
