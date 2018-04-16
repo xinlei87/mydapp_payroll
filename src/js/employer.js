@@ -9,6 +9,7 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
   }).then(function(response){
     console.log(response);
     $scope.objs = response.data;
+    console.log($scope.objs);
     $scope.sum = $scope.objs.length;
     console.log($scope.sum);
   },function(e){
@@ -47,24 +48,29 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       console.log(responce);
       if(responce == 'ok'){
         //删除用户
-        $http({
-          method:'DELETE',
-          url:'http:localhost:8888/delete'
-          params{
-            id:temp.number
-          }
-        }).then(function(response){
-          console.log(response);
-          $rootScope.contracts.Payroll.instance.removeEmployee(temp.address,{from:$rootScope.account,gas:300000}).then(function(re){
-            console.log(re);
-
+        $rootScope.contracts.Payroll.instance.removeEmployee(temp.address,{from:$rootScope.account,gas:300000}).then(function(re){
+          console.log(re);
+          $http({
+            method:'DELETE',
+            url:'http://localhost:8888/delete',
+            params:{
+              id:temp.number
+            }
+          }).then(function(response){
+            console.log("shujukushanchu :");
+            console.log(response);
           },function(e){
+            //数据库失败
             console.log(e);
           })
+        },function(e){
+          //链上存储失败
+          console.log(e);
         })
       }
       else return ;
     },function(e){
+      //窗口失败
       console.log(e);
     })
   }
@@ -78,40 +84,45 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       if(result == 'close'){
         return ;
       }
-      //存储员工姓名等其他信息
-      $http({
-        method:'POST',
-        url:'http://localhost:8888/addEmployee',
-        data:{
-          name:result.name,
-          sex: result.sex,
-          birth:result.birth,
-          position:result.position,
-          address:result.address,
-          accountname:result.accountname
-        },
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        transformRequest: function(obj) {
-            var str = [];
-            for (var s in obj) {
-              str.push(encodeURIComponent(s) + "=" + encodeURIComponent(obj[s]));
-            }
-            return str.join("&");
-          }
-      }).then(function(response){
-        console.log(response);
         //存储链上信息
-        $rootScope.contracts.Payroll.instance.addEmployee(result.payAccount, result.salary, $scope.sum +1, {from: $rootScope.account,gas:300000}).then(function(re){
-          $scope.sum ++;
-          console.log("re:");
-          console.log(re);
-        },function(e){
-          console.log(e);
-        });
+      $scope.sum ++;
+      $rootScope.contracts.Payroll.instance.addEmployee(result.payAccount, result.salary, $scope.sum, {from: $rootScope.account,gas:300000}).then(function(re){
+        console.log("re:");
+        console.log(re);
+        //存储数据库数据
+        $http({
+          method:'POST',
+          url:'http://localhost:8888/addEmployee',
+          data:{
+            name:result.name,
+            sex: result.sex,
+            birth:result.birth,
+            position:result.position,
+            address:result.address,
+            accountname:result.accountname,
+            password :"123456",
+            id:$scope.sum
+          },
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          transformRequest: function(obj) {
+              var str = [];
+              for (var s in obj) {
+                str.push(encodeURIComponent(s) + "=" + encodeURIComponent(obj[s]));
+              }
+              return str.join("&");
+            }
+        }).then(function(response){
+              console.log("shujuku :");
+              console.log(response);
+            },function(e){
+              console.log(e);
+            })
       },function(e){
+        //链上数据存储失败
         console.log(e);
-      })
+      });
     },function(e){
+      //窗口关闭
       console.log(e);
     })
   }
@@ -205,6 +216,7 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
                 tempobj.salary = web3.fromWei($scope.payobjs[i][1],'ether');
                 tempobj.lastPayday = $scope.payobjs[i][2];
                 tempobj.number = $scope.payobjs[i][3];
+                tempobj.name = $scope.objs[tempobj.number -1].name;
                 $scope.pays.push(tempobj);
               }
             }
