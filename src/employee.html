@@ -19,66 +19,62 @@
         </ul>
       </div>
       <div class="col s8" ng-show="info" style="margin-left:-18px;">
-        <div class="card">
-          <div class="card-title">
-            <div class="row">
-              <div class="col s4">
-                  <img src={{obj.img}} alt="this is a picture" style="width:250px;height:300px"/>
-              </div>
-              <div class="col s8">
-                <br /><br />
-                <i class="Medium material-icons" style="vertical-align:middle;">account_circle</i>
-                <span style="vertical-align:middle;">{{obj.name}}</span>
-                <br />
-                <br />
-                <i class="Medium material-icons" style="vertical-align:middle;">local_phone</i>
-                <span style="vertical-align:middle;">{{obj.phone}}</span>
-                <br />
-                <i class="Medium material-icons" style="vertical-align:middle;">location_on</i>
-                <span style="vertical-align:middle;">{{obj.address}}</span>
-              </div>
-            </div>
+        <!-- 员工列表 -->
+        <div class="card-panel">
+          <div class="card-title center-align">
+            <h5>我的资料卡</h5>
           </div>
-          <div class="card-content">
-            <div class="">
-              <ul class="collection">
-                <li class="collection-item">
-                  <i class="Medium material-icons" style="vertical-align:middle;">perm_identity</i>
-                  <span style="vertical-align:middle;">自我介绍&nbsp&nbsp&nbsp&nbsp&nbsp{{obj.introduction}} </span>
-                </li>
-                <li class="collection-item">
-                  <i class="Medium material-icons" style="vertical-align:middle;">person_pin_circle</i>
-                  <span style="vertical-align:middle;">职位&nbsp&nbsp&nbsp&nbsp&nbsp{{obj.position}}</span>
-                </li>
-                <li class="collection-item">
-                  <i class="Medium material-icons" style="vertical-align:middle;">cake</i>
-                  <span style="vertical-align:middle;">生日&nbsp&nbsp&nbsp&nbsp&nbsp{{obj.birth}}</span>
-                </li>
-                <li class="collection-item">
-                  <i class="Medium material-icons" style="vertical-align:middle;">access_time</i>
-                  <span style="vertical-align:middle;">加入公司时间&nbsp&nbsp&nbsp&nbsp&nbsp{{obj.jointime}}</span>
-                </li>
-              </ul>
-            </div>
+          <div class="card-panel">
+            <div class="card-content">
+              <div class="panel">
+                <ul class="collection">
+                  <li class="collection-item">
+                    <i class="Small material-icons">person</i>
+                    <span class="span-li">姓名：{{obj.name}}</span>
+                  </li class="collection-item">
+                  <li class="collection-item">
+                    <i class="Small material-icons">ac_unit</i>
+                    <span  class="span-li" ng-show = "obj.sex == 0">性别：男</span>
+                    <span class="span-li" ng-show = "obj.sex == 1">性别：女</span>
+                  </li>
+                  <li class="collection-item">
+                    <i class="Small material-icons">child_care</i>
+                    <span class="span-li">出生日期：{{obj.birth}}</span>
+                  </li>
+                  <li class="collection-item">
+                    <i class="Small material-icons">fullscreen</i>
+                    <span class="span-li">职位：{{obj.position}}</span>
+                  </li>
+                  <li class="collection-item">
+                    <i class="Small material-icons">location_on</i>
+                    <span class="span-li">住址：{{obj.address}}</span>
+                  </li>
+                </ul>
+              </div>
+
+          </div>
           </div>
         </div>
       </div>
       <div class="col s8" ng-hide="info" style="margin-left:-18px;">
-        <div class="panel">
-          <ul class="collection">
-            <li class="collection-item">
-              <span>我的工资：{{pay.salary}}</span>
-            </li>
-            <li class="collection-item">
-              <span>上次发工资日期：{{pay.lastPayday*1000| date : 'yyyy-MM-dd HH:mm:ss'}}</span>
-            </li>
-            <li class="collection-item">
-              <span>我的账户：{{pay.address}}</span>
-            </li>
-          </ul>
+        <div class="card-panel">
+          <div class="card-content">
+            <ul class="collection">
+              <li class="collection-item">
+                <span>我的工资：{{pay.salary}}</span>
+              </li>
+              <li class="collection-item">
+                <span>上次发工资日期：{{pay.lastPayday*1000| date : 'yyyy-MM-dd HH:mm:ss'}}</span>
+              </li>
+              <li class="collection-item">
+                <span>我的账户：{{pay.address}}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="card-action">
+            <button class="waves-effect waves-light btn" ng-click="getpay()">我要发工资</button>
+          </div>
         </div>
-        <div class="panel">
-          <button class="waves-effect waves-light btn" ng-click="getpay()">我要发工资</button>
-        </div>
+
       </div>
     </div>

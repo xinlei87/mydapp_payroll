@@ -21,12 +21,13 @@
     </ul>
   </div>
   <div class="col s8" ng-show="money" style="margin-left:-18px;">
-    <div class="container card">
-      <div class="container card-title">
-        员工列表 &nbsp&nbsp <button class="waves-effect waves-light btn" ng-click="addEmployee()">添加员工</button>
+    <div class="card-panel">
+      <div class="card-title center-align">
+        <h5>员工列表</h5>
+        <a class="waves-effect waves-light btn right" ng-click="addEmployee()">添加员工</a>
       </div>
       <div class="card-content">
-        <table class="striped">
+        <table class="table striped">
           <thead>
             <tr>
                 <th>姓名</th>
@@ -50,14 +51,10 @@
     </div>
   </div>
   <div class="col s8" ng-hide="money">
-    <div class="card">
-      <div class="row">
-        <div class="col s6">
-          <span>工资账户余额(ether)：{{balance}}</span>
-        </div>
-        <div class="col s6">
-          <button class="waves-effect waves-light btn" ng-click="addFund()">账户充值</button>
-        </div>
+    <div class="card-panel">
+      <div class="card-title left-align">
+          <h5>工资账户余额(ether)：{{balance}}</h5>
+          <a class="waves-effect waves-light btn right" ng-click="addFund()">账户充值</a>
       </div>
       <div class="card-content">
         <table class="striped">
@@ -238,6 +235,39 @@
               <a class="waves-effect waves-light btn" ng-click="ok()">确定</a>
             </div>
         </div>
+      </div>
+    </div>
+  </script>
+
+  <script id="Employeeinfo.html" type="text/ng-template">
+    <div class="panel">
+      <div class="modal-content">
+        <ul class="collection">
+          <li class="collection-item">
+            <i class="Small material-icons">person</i>
+            <span class="span-li">姓名：{{temp.name}}</span>
+          </li class="collection-item">
+          <li class="collection-item">
+            <i class="Small material-icons">ac_unit</i>
+            <span  class="span-li" ng-show = "temp.sex == 0">性别：男</span>
+            <span class="span-li" ng-show = "temp.sex == 1">性别：女</span>
+          </li>
+          <li class="collection-item">
+            <i class="Small material-icons">child_care</i>
+            <span class="span-li">出生日期：{{temp.birth}}</span>
+          </li>
+          <li class="collection-item">
+            <i class="Small material-icons">fullscreen</i>
+            <span class="span-li">职位：{{temp.position}}</span>
+          </li>
+          <li class="collection-item">
+            <i class="Small material-icons">location_on</i>
+            <span class="span-li">住址：{{obj.address}}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button class="waves-effect waves-light btn" ng-click="close()">关闭</button>
       </div>
     </div>
   </script>

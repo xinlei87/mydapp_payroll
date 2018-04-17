@@ -26,3 +26,12 @@
 .modal{
   margin-top: 50px !important;
 }
+.span-li{
+  vertical-align:top !important;
+}
+body{
+  background-image: url(../assets/imgs/background.jpg);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-color: #000000;
+}

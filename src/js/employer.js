@@ -233,4 +233,21 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal,$
       }
     })
   }
+
+  $scope.Employeeinfo = function(temp){
+    $scope.modalInstance5 = $uibModal.open({
+      templateUrl:'Employeeinfo.html',
+      controller:'EmployeeinfoController',
+      resolve:{
+        temp: function(){
+          return temp;
+        }
+      }
+    })
+    $scope.modalInstance5.result.then(function(re){
+      console.log(re);
+    },function(e){
+      console.log(e);
+    })
+  }
 })

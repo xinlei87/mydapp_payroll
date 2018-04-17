@@ -48,3 +48,10 @@ app.controller('addEmployeeController',function($uibModalInstance,$scope){
     $uibModalInstance.dismiss('close');
   }
 })
+
+app.controller('EmployeeinfoController',function($scope,$uibModalInstance,temp){
+  $scope.temp = temp;
+  $scope.close = function(){
+    $uibModalInstance.dismiss('close');
+  }
+})
