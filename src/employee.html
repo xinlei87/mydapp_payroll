@@ -64,6 +64,21 @@
         </div>
       </div>
       <div class="col s8" ng-hide="info" style="margin-left:-18px;">
-
+        <div class="panel">
+          <ul class="collection">
+            <li class="collection-item">
+              <span>我的工资：{{pay.salary}}</span>
+            </li>
+            <li class="collection-item">
+              <span>上次发工资日期：{{pay.lastPayday*1000| date : 'yyyy-MM-dd HH:mm:ss'}}</span>
+            </li>
+            <li class="collection-item">
+              <span>我的账户：{{pay.address}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="panel">
+          <button class="waves-effect waves-light btn" ng-click="getpay()">我要发工资</button>
+        </div>
       </div>
     </div>

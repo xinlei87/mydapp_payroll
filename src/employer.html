@@ -36,7 +36,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat = " x in objs">
+            <tr ng-repeat = " x in objs" ng-show= "x.flag == 1">
               <td>{{x.name}}</td>
               <td>{{x.sex}}</td>
               <td>{{x.position}}</td>

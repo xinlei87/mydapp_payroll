@@ -14,7 +14,7 @@ contract Payroll is Ownable {
         uint number;//用户编号
     }
 
-    uint constant payDuration = 30 days;//每30天发一次工资
+    uint constant payDuration = 1 seconds;//每30天发一次工资
 
     uint totalSalary;//总工资
     uint totalEmployee;//总员工数
@@ -119,7 +119,7 @@ contract Payroll is Ownable {
         var employee = employees[msg.sender];
 
         uint nextPayday = employee.lastPayday.add(payDuration);//下次发工资的时间
-        assert(nextPayday < now);
+        require(nextPayday < now);
 
         employee.lastPayday = nextPayday;//更新发工资日期
         employee.id.transfer(employee.salary);

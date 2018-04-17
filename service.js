@@ -12,33 +12,15 @@ connection.connect(function(err){
   console.log("connected!");
  });
 
-
-//登录--login  post
-//添加员工--addemployee  post
-// var post = '';
-// request.on('data',function(chunk){
-//   post += chunk;
-// })
-// request.on('end',function(){
-//   post = querystring.parse(post);
-//   console.log(post);
-// })
-//删除员工 -- delete  delete
-
-//员工的详细信息  employeeinfo get
-// var q = url.parse(request.url, true);
-//所有员工信息 employeesinfo get
-
-// var qdata = q.query; //returns an object: { year: 2017, month: 'february' },解析url中的参数
-
 //启动服务器，监听请求
 var http = require('http');
 var fs = require('fs');
 var url = require('url');
 var querystring = require('querystring');
 http.createServer( function (request, response) {
-  // console.log("request:");
-  var type = request.url;//哪个页面发的请求
+  console.log("request:");
+  // var q = url.parse(request.url, true).
+  var type = url.parse(request.url, true).pathname;//哪个页面发的请求
   console.log(type);
   if(type == "/login"){
     //验证用户登录
@@ -77,7 +59,7 @@ http.createServer( function (request, response) {
   }
   else if(type == '/employeesinfo'){
     //查看所有用户信息
-    var sql = "SELECT * FROM infos WHERE flag = 1";
+    var sql = "SELECT * FROM infos";
     connection.query(sql,function(err,result){
       if(err) throw err;
       console.log("infos:");
@@ -114,7 +96,7 @@ http.createServer( function (request, response) {
       })
     })
   }
-  else {
+  else if(type == '/delete') {
     //删除用户置标志位为0
     var q = url.parse(request.url, true).query;
     console.log(q);
@@ -127,6 +109,20 @@ http.createServer( function (request, response) {
       response.setHeader("Access-Control-Allow-Origin","*");
       response.writeHead(200,{'Content-Type': 'text/html; charset=utf8'});
       response.end();
+    })
+  }
+  else if(type == '/employeeinfo'){
+    var q = url.parse(request.url, true).query;
+    console.log(q);
+    var id = q.id;
+    var sql = "SELECT * FROM infos WHERE id =" + id + " AND flag = 1";
+    connection.query(sql,function(err,result){
+      if(err) throw err;
+      console.log(result);
+      response.setHeader("Access-Control-Allow-Methods", "GET,PUT,DELETE,POST");
+      response.setHeader("Access-Control-Allow-Origin","*");
+      response.writeHead(200,{'Content-Type': 'text/html; charset=utf8'});
+      response.end(JSON.stringify(result));
     })
   }
 }).listen(8888);

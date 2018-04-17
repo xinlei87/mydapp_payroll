@@ -1,20 +1,12 @@
-app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
+app.controller('employerController',function($scope,$http,$rootScope,$uibModal,$location){
+  if($rootScope.userid == null){
+    $location.path('/');
+  }
   $scope.objs = [];
   $scope.money = true;
   $scope.sum = 1
 
-  $http({
-    method:'GET',
-    url:'http://localhost:8888/employeesinfo'
-  }).then(function(response){
-    console.log(response);
-    $scope.objs = response.data;
-    console.log($scope.objs);
-    $scope.sum = $scope.objs.length;
-    console.log($scope.sum);
-  },function(e){
-    console.log(e);
-  })
+
   $rootScope.contracts = {};
 
   $.getJSON('Payroll.json',function(data){
@@ -28,10 +20,22 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
     })
   })
 
-
   $scope.getinfos = function(){
     $scope.money = true;
+    $http({
+      method:'GET',
+      url:'http://localhost:8888/employeesinfo'
+    }).then(function(response){
+      console.log(response);
+      $scope.objs = response.data;
+      console.log($scope.objs);
+      $scope.sum = $scope.objs.length;
+      console.log($scope.sum);
+    },function(e){
+      console.log(e);
+    })
   }
+  $scope.getinfos();
 //删除员工 ok
   $scope.deleteEmployee = function(temp){
     //打开模态窗口
@@ -87,6 +91,7 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
         //存储链上信息
       $scope.sum ++;
       $rootScope.contracts.Payroll.instance.addEmployee(result.payAccount, result.salary, $scope.sum, {from: $rootScope.account,gas:300000}).then(function(re){
+        console.log("sum:" + $scope.sum);
         console.log("re:");
         console.log(re);
         //存储数据库数据
@@ -168,8 +173,9 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
       }
       //账户充值 ok
       console.log("chongzhi :" + responce);
-      $rootScope.contracts.Payroll.instance.addFund({from:$rootScope.accout,value:web3.toWei(responce)}).then(function(re){
+      $rootScope.contracts.Payroll.instance.addFund({from:$rootScope.accout,value:web3.toWei(responce,'ether')}).then(function(re){
         $scope.balance = responce;
+        console.log("addfund:");
         console.log(re);
       })
       //更改显示的值
@@ -209,7 +215,7 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
             // console.log("length:");
             // console.log($scope.payobjs.length);
             if($scope.payobjs.length == $scope.count){
-              console.log("is ok");
+              console.log("is ok");console.log($scope.objs);
               for(var i = 0; i< $scope.count; i++){
                 var tempobj = new Object();
                 tempobj.address = $scope.payobjs[i][0];
@@ -225,8 +231,6 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal){
             $scope.$apply('pays');
           })
       }
-    }).then(function(){
-      console.log($scope.pays);
-    });
+    })
   }
 })

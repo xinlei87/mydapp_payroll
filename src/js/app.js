@@ -64,9 +64,9 @@ app.controller('loginController',function($scope,$location,$http,$rootScope){
         }
       }).then(function(response){
           console.log("ok");
+          $rootScope.userid = response.data.id;
           if($scope.accounttype == "employee"){
             //记录用户id
-            $rootScope.userid = response.data.id;
             $location.path("/employee");
           }
           else{
