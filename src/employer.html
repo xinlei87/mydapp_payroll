@@ -163,8 +163,9 @@
             </div>
             <div class="row">
               <div class="input-field col s12">
-                <input name="birth" type="text" ng-model="birth" />
-                <label for="birth">出生年月(xxxx-xx-xx)</label>
+                <p>
+                  <input type="text" ng-model="config" ng-click="open()" readonly>
+                </p>
               </div>
             </div>
             <div class="row">
@@ -262,7 +263,7 @@
           </li>
           <li class="collection-item">
             <i class="Small material-icons">location_on</i>
-            <span class="span-li">住址：{{obj.address}}</span>
+            <span class="span-li">住址：{{temp.address}}</span>
           </li>
         </ul>
       </div>

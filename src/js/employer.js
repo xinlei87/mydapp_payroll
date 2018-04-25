@@ -20,6 +20,11 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal,$
     })
   })
 
+//账户登出
+  $scope.logout = function(){
+    $location.path("/");
+  }
+//获取员工信息
   $scope.getinfos = function(){
     $scope.money = true;
     $http({
@@ -106,7 +111,8 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal,$
             address:result.address,
             accountname:result.accountname,
             password :"123456",
-            id:$scope.sum
+            id:$scope.sum,
+            type:0
           },
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           transformRequest: function(obj) {
@@ -192,6 +198,7 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal,$
     $scope.count;
     //员工人数---》一个一个的得到员工的工资，编号与json文件的编号相对应
     $rootScope.contracts.Payroll.instance.checkInfo.call().then(function(data){
+    console.log(data);
     $scope.balance = web3.fromWei(data[0].c[0],'ether');
     $scope.count = data[2].c[0];
     console.log("员工人数：" + $scope.count);

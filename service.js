@@ -31,14 +31,12 @@ http.createServer( function (request, response) {
     request.on('end',function(){
       post = querystring.parse(post);
       // console.log(post);
-      var accountname = post.accountname;
-      var password = post.password;
       //由于node 的异步执行机制，无法将数据库操作单独写为函数
-      var sql = "SELECT * FROM accounts WHERE accountname = \'" + accountname + "\' AND password = \'" + password + "\'" ;
+      var sql = "SELECT * FROM accounts WHERE accountname = \'" + post.accountname + "\' AND password = \'" + post.password + "\' AND type = \'" + post.type + "\'" ;
       connection.query(sql,function(err,result,fields){
         if(err) throw err;
-        // console.log(sql);
-        // console.log(result);
+         // console.log(sql);
+         // console.log(result);
         if(result.length == 0){
           response.setHeader("Access-Control-Allow-Origin","*");
           response.writeHead(404, {'Content-Type': 'text/html; charset=utf8'});

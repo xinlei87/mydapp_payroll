@@ -22,7 +22,7 @@ app.controller('employeeController',function($scope,$rootScope,$http,$location){
     }
   }).then(function(response){
     $scope.obj = response.data[0];
-    console.log($scope.obj);
+    console.log(response);
     $.getJSON('Payroll.json',function(data){
       $rootScope.contracts.Payroll = TruffleContract(data);
       //---终于改对！！！！  必须是web3.currentProvider!!!!!

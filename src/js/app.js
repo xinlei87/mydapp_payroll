@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('myApp',['ngRoute','ui.bootstrap','ngAnimate']);
+var app = angular.module('myApp',['ngRoute','ui.bootstrap','ngAnimate', 'ng-date']);
 
 // web3 合约的处理------------------
 //创建web3对象
@@ -52,7 +52,8 @@ app.controller('loginController',function($scope,$location,$http,$rootScope){
       url:'http://localhost:8888/login',
       data:{
         accountname:$scope.accountname,
-        password:$scope.password
+        password:$scope.password,
+        type:$scope.accounttype
       },
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       transformRequest: function(obj) {
@@ -65,7 +66,7 @@ app.controller('loginController',function($scope,$location,$http,$rootScope){
       }).then(function(response){
           console.log("ok");
           $rootScope.userid = response.data.id;
-          if($scope.accounttype == "employee"){
+          if($scope.accounttype == 0){
             //记录用户id
             $location.path("/employee");
           }
