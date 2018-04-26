@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('myApp',['ngRoute','ui.bootstrap','ngAnimate', 'ng-date']);
+var app = angular.module('myApp',['ngRoute','ui.bootstrap','ngAnimate','ngComboDatePicker']);
 
 // web3 合约的处理------------------
 //创建web3对象

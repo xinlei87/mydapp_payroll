@@ -35,3 +35,8 @@ body{
   background-size: 100%;
   background-color: #000000;
 }
+.modal-content  select{
+    display: inline !important;
+    width:auto;
+    background-color: #D5DBDB;
+}

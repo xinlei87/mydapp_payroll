@@ -31,22 +31,15 @@ app.controller('deleteEmployeeController',function($uibModalInstance,$scope,name
   }
 })
 
-app.controller('addEmployeeController',function($uibModalInstance,$scope,datePicker){
+app.controller('addEmployeeController',function($uibModalInstance,$scope,$filter){
   //出生日期选择
-  $scope.config = '2016-6-21';
-  $scope.open = function() {
-      // console.log(this)
-      var p = datePicker.open($scope.config);
-      p.then(function(s) {
-          $scope.config = s
-      })
-  };
+
 
   $scope.obj = {};
   $scope.ok = function(){
     $scope.obj.name = $scope.name;
     $scope.obj.sex = $scope.sex;
-    $scope.obj.birth = $scope.birth;
+    $scope.obj.birth = $filter('date')($scope.birth.getTime(), "yyyy-MM-dd");
     $scope.obj.salary = $scope.salary;
     $scope.obj.position = $scope.position;
     $scope.obj.address = $scope.address;

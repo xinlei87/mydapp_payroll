@@ -93,6 +93,7 @@ app.controller('employerController',function($scope,$http,$rootScope,$uibModal,$
       if(result == 'close'){
         return ;
       }
+      console.log(result.birth);
         //存储链上信息
       $scope.sum ++;
       $rootScope.contracts.Payroll.instance.addEmployee(result.payAccount, result.salary, $scope.sum, {from: $rootScope.account,gas:300000}).then(function(re){

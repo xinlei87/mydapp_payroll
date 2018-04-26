@@ -81,9 +81,10 @@ http.createServer( function (request, response) {
       post.id = parseInt(post.id);
       //name varchar(25),sex int,birth varchar(15),position varchar(35),address varchar(50),accountname varchar(24),id int primary key);
       var sql = "INSERT INTO infos (name,sex,birth,position,address,accountname,id,flag) VALUES(\'" + post.name + "\',\'" + post.sex + "\',\'" + post.birth + "\',\'" + post.position + "\',\'" + post.address + "\',\'" + post.accountname + "\',"+ post.id + ",1)";
+      console.log(sql);
       connection.query(sql,function(err,result){
         if(err) throw err;
-        sql = "INSERT INTO accounts (accountname,password,id) VALUES(\'" + post.accountname + "\',\'"+ post.password + "\',\'" + post.id + "\')";
+        sql = "INSERT INTO accounts (accountname,password,id,type) VALUES(\'" + post.accountname + "\',\'"+ post.password + "\',\'" + post.id + "\',0)";
         connection.query(sql,function(err,result){
           response.setHeader("Access-Control-Allow-Origin","*");
           response.writeHead(200,{'Content-Type': 'text/html; charset=utf8'});
