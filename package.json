@@ -19,6 +19,7 @@
     "angular-animate": "^1.6.9",
     "angular-ui-bootstrap": "^2.5.6",
     "bootstrap": "^4.0.0",
+    "bower": "^1.8.4",
     "jquery": "^3.3.1",
     "mysql": "^2.15.0",
     "node-mysql": "^0.4.2",
